@@ -229,7 +229,7 @@ for question in questions:
     elif answer.lower() == "quit":
         break
     else:
-        print(f"Incorrect. The correct answer is {question['answer']}.")
+        print("Incorrect. The correct answer is " + question['answer'] + ".")
 
 # Add the user's name and score to the leaderboard
 if name.lower() == "clear":
@@ -249,9 +249,9 @@ else:
     print("LEADERBOARD")
     print("-----------")
     for i, (name, score) in enumerate(numeric_leaderboard):
-        print(f"{i+1}. {name}: {score}")
+        print("{0}. {1}: {2}".format(i+1, name, score))
 
     # Save the updated leaderboard to a file
     with open("leaderboard.txt", "w") as f:
         for name, score in numeric_leaderboard:
-            f.write(f"{name},{score}\n")
+            f.write("{},{}\n".format(name, score))
