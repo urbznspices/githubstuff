@@ -1,2 +1,4 @@
-Arel,1
-no,0
+Arel,40
+Emily,1
+Sam,0
+Michael Kuper,0

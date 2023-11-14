@@ -194,6 +194,82 @@ questions = [
     {
         "question": "What is the name of the island in Hawaii where the famous Napali coast is located?",
         "answer": "Kauai"
+    },
+    {
+        "question": "On what battleship does the Pearl Harbor memorial sit?",
+        "answer": "USS Arizona"
+    },
+    {
+        "question": "What is the name of the royal palace in Honolulu?",
+        "answer": "Iolani Palace"
+    },
+    {
+        "question": "What is the name of the school located in Honolulu that President Obama attended?",
+        "answer": "Punahou"
+    },
+    {
+        "question": "What is the name of the school located in Waimea that Arel attended?",
+        "answer": "Hawaii Preparatory Academy"
+    },
+    {
+        "question": "What is the mascot of the University of Hawaii at Manoa?",
+        "answer": "Rainbow Warriors"
+    },
+    {
+        "question": "What is the mascot of the University of Hawaii at Hilo?",
+        "answer": "Vulcans"
+    },
+    {
+        "question": "How many islands are in Hawaii?",
+        "answer": "8"
+    },
+    {
+        "question": "What is the name of the island in Hawaii where the famous pineapple is grown?",
+        "answer": "Oahu"
+    },
+    {
+        "question": "How do you say 'Merry Christmas' in Hawaiian?",
+        "answer": "Mele Kalikimaka"
+    },
+    {
+        "question": "How do you say 'Happy New Year' in Hawaiian?",
+        "answer": "Hau'oli Makahiki Hou"
+    },
+    {
+        "question": "How do you say 'Happy Birthday' in Hawaiian?",
+        "answer": "Hau'oli La Hanau"
+    },
+    {
+        "question": "How do you say 'I love you' in Hawaiian?",
+        "answer": "Aloha Au Ia 'Oe"
+    },
+    {
+        "question": "How do you say 'perseverance' in Hawaiian?",
+        "answer": "Ho'omau"
+    },
+    {
+        "question": "Who is the famous Hawaiian surfer who popularized surfing in the 1950s?",
+        "answer": "Duke Kahanamoku"
+    },
+    {
+        "question": "What is the name of the most famous Hawaiian baseball player?",
+        "answer": "Shane Victorino"
+    },
+    {
+        "question": "What is the name of the most famous Hawaiian football player?",
+        "answer": "Marcus Mariota"
+    },
+    {
+        "question": "What is the name of the president in office that refused to annex Hawaii?",
+        "answer": "Grover Cleveland"
+    },
+    {
+        "question": "What is the name of the president in office that annexed Hawaii?",
+        "answer": "William McKinley"
+    },
+    {
+        "question": "What is the name of the president in office when Hawaii became a state?",
+        "answer": "Dwight Eisenhower", "answer": "Dwight D. Eisenhower"
     }
 ]
 
@@ -236,7 +312,17 @@ if name.lower() == "clear":
     with open("leaderboard.txt", "w") as f:
         f.write("Name,Score\n")
 else:
-    leaderboard.append([name, str(score)])
+    # Check if the user's name is already in the leaderboard
+    name_exists = False
+    for i, entry in enumerate(leaderboard):
+        if entry[0] == name:
+            leaderboard[i][1] = str(score)
+            name_exists = True
+            break
+
+    # If the user's name is not in the leaderboard, add it
+    if not name_exists:
+        leaderboard.append([name, str(score)])
 
     # Create a new list that only contains entries where the score is a number
     numeric_leaderboard = [
