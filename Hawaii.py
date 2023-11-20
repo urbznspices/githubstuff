@@ -1,5 +1,8 @@
 import random
 import os
+import json
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog
 
 # Define the list of questions and answers about Hawaii
 questions = [
@@ -273,56 +276,210 @@ questions = [
     }
 ]
 
-# Check if leaderboard file exists, if not create one
-if not os.path.exists("leaderboard.txt"):
-    with open("leaderboard.txt", "w") as f:
-        f.write("Name,Score\n")
 
-# Load the leaderboard from a file
-with open("leaderboard.txt", "r") as f:
-    leaderboard = [line.strip().split(",") for line in f]
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-# Welcome message
-print("Welcome to the Hawaii Trivia Game!")
-print("Type 'quit' at any time to exit the game and see the leaderboard.")
+        # Set window title and size
+        self.setWindowTitle("Hawaii Trivia Game")
+        self.setGeometry(100, 100, 400, 300)
 
-# Ask the user for their name
-name = input("What is your name? ")
+        # Create menu labels
+        self.menu_label = QLabel("MENU", self)
+        self.menu_label.setGeometry(150, 50, 100, 30)
 
-# Shuffle the list of questions
-random.shuffle(questions)
+        # Create buttons
+        self.start_button = QPushButton("Start Game", self)
+        self.start_button.setGeometry(100, 100, 200, 30)
 
-# Initialize the score
-score = 0
+        self.leaderboard_button = QPushButton("Leaderboard", self)
+        self.leaderboard_button.setGeometry(100, 150, 200, 30)
 
-# Loop through the questions and ask the user each question
-for question in questions:
-    print(question["question"])
-    answer = input("Enter your answer: ")
-    if answer.lower() == question["answer"].lower():
-        print("Correct!")
-        score += 1
-    elif answer.lower() == "quit":
-        break
+        self.quit_button = QPushButton("Quit", self)
+        self.quit_button.setGeometry(100, 200, 200, 30)
+
+        # Connect button signals to slots
+        self.start_button.clicked.connect(self.start_game)
+        self.leaderboard_button.clicked.connect(self.view_leaderboard)
+        self.quit_button.clicked.connect(self.close)
+
+    def start_game(self):
+        start_game()
+
+    def view_leaderboard(self):
+        leaderboard_window = LeaderboardWindow()
+        leaderboard_window.show()
+
+
+class LeaderboardWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Set window title and size
+        self.setWindowTitle("Leaderboard")
+        self.setGeometry(100, 100, 400, 300)
+
+        # Create leaderboard label
+        self.leaderboard_label = QLabel("LEADERBOARD", self)
+        self.leaderboard_label.setGeometry(130, 50, 150, 30)
+
+        # Create buttons
+        self.view_button = QPushButton("View Leaderboard", self)
+        self.view_button.setGeometry(100, 100, 200, 30)
+
+        self.delete_button = QPushButton("Delete Entry", self)
+        self.delete_button.setGeometry(100, 150, 200, 30)
+
+        self.clear_button = QPushButton("Clear Leaderboard", self)
+        self.clear_button.setGeometry(100, 200, 200, 30)
+
+        self.back_button = QPushButton("Back", self)
+        self.back_button.setGeometry(100, 250, 200, 30)
+
+        # Connect button signals to slots
+        self.view_button.clicked.connect(self.view_leaderboard)
+        self.delete_button.clicked.connect(self.delete_entry)
+        self.clear_button.clicked.connect(self.clear_leaderboard)
+        self.back_button.clicked.connect(self.close)
+
+    def view_leaderboard(self):
+        # Load the leaderboard from a file
+        with open("leaderboard.txt", "r") as f:
+            leaderboard = [line.strip().split(",") for line in f]
+
+        # Display the leaderboard
+        leaderboard_text = ""
+        for entry in leaderboard:
+            leaderboard_text += f"{entry[0]} - {entry[1]}\n"
+
+        QMessageBox.information(None, "Leaderboard", leaderboard_text)
+
+    def delete_entry(self):
+        # Ask the user for the name to delete
+        name, ok = QInputDialog.getText(
+            None, "Delete Entry", "Enter the name to delete:")
+        if ok:
+            name = name.strip()
+        else:
+            return
+
+        # Load the leaderboard from a file
+        with open("leaderboard.txt", "r") as f:
+            leaderboard = [line.strip().split(",") for line in f]
+
+        # Remove the entry with the specified name
+        leaderboard = [entry for entry in leaderboard if entry[0] != name]
+
+        # Save the updated leaderboard to the file
+        with open("leaderboard.txt", "w") as f:
+            for entry in leaderboard:
+                f.write(f"{entry[0]},{entry[1]}\n")
+
+        QMessageBox.information(None, "Delete Entry",
+                                "Entry deleted successfully.")
+
+    def clear_leaderboard(self):
+        # Confirm with the user before clearing the leaderboard
+        reply = QMessageBox.question(
+            None, "Clear Leaderboard", "Are you sure you want to clear the leaderboard?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
+
+        if reply == QMessageBox.Yes:
+            # Clear the leaderboard file
+            with open("leaderboard.txt", "w") as f:
+                f.write("Name,Score\n")
+
+            QMessageBox.information(
+                None, "Clear Leaderboard", "Leaderboard cleared successfully.")
+
+
+def start_game():
+    # Check if leaderboard file exists, if not create one
+    if not os.path.exists("leaderboard.txt"):
+        with open("leaderboard.txt", "w") as f:
+            f.write("Name,Score\n")
+
+    # Load the leaderboard from a file
+    with open("leaderboard.txt", "r") as f:
+        leaderboard = [line.strip().split(",") for line in f]
+
+    # Welcome message
+    QMessageBox.information(None, "Hawaii Trivia Game",
+                            "Welcome to the Hawaii Trivia Game!")
+
+    # Ask the user for their name
+    name, ok = QInputDialog.getText(
+        None, "Hawaii Trivia Game", "What is your name?")
+    if ok:
+        name = name.strip()
     else:
-        print("Incorrect. The correct answer is " + question['answer'] + ".")
+        return
 
-# Add the user's name and score to the leaderboard
-if name.lower() == "clear":
-    with open("leaderboard.txt", "w") as f:
-        f.write("Name,Score\n")
-else:
-    # Check if the user's name is already in the leaderboard
-    name_exists = False
-    for i, entry in enumerate(leaderboard):
-        if entry[0] == name:
-            leaderboard[i][1] = str(score)
-            name_exists = True
-            break
+    # Shuffle the list of questions
+    random.shuffle(questions)
 
-    # If the user's name is not in the leaderboard, add it
-    if not name_exists:
-        leaderboard.append([name, str(score)])
+    # Initialize the score
+    score = 0
+
+    # Loop through the questions and ask the user each question
+    for question in questions:
+        answer, ok = QInputDialog.getText(
+            None, "Hawaii Trivia Game", question["question"])
+        if ok:
+            answer = answer.strip()
+        else:
+            return
+
+        if answer.lower() == question["answer"].lower():
+            QMessageBox.information(None, "Hawaii Trivia Game", "Correct!")
+            score += 1
+        else:
+            QMessageBox.information(
+                None, "Hawaii Trivia Game", "Incorrect. The correct answer is " + question['answer'] + ".")
+
+    # Add the user's name and score to the leaderboard
+    if name.lower() == "clear":
+        with open("leaderboard.txt", "w") as f:
+            f.write("Name,Score\n")
+    else:
+        # Check if the user's name is already in the leaderboard
+        name_exists = False
+        for i, entry in enumerate(leaderboard):
+            if entry[0] == name:
+                leaderboard[i][1] = str(score)
+                name_exists = True
+                break
+
+        # If the user's name is not in the leaderboard, add it
+        if not name_exists:
+            leaderboard.append([name, str(score)])
+
+        # Create a new list that only contains entries where the score is a number
+        numeric_leaderboard = [
+            entry for entry in leaderboard if entry[1].isdigit()]
+
+        # Sort the numeric_leaderboard by score in descending order
+        numeric_leaderboard.sort(key=lambda x: int(x[1]), reverse=True)
+
+        # Display the leaderboard to the user
+        leaderboard_text = "LEADERBOARD\n-----------\n"
+        for i, (name, score) in enumerate(numeric_leaderboard):
+            leaderboard_text += "{0}. {1}: {2}\n".format(i+1, name, score)
+
+        QMessageBox.information(None, "Hawaii Trivia Game", leaderboard_text)
+
+        # Save the updated leaderboard to a file
+        with open("leaderboard.txt", "w") as f:
+            for name, score in numeric_leaderboard:
+                f.write("{},{}\n".format(name, score))
+
+
+def view_leaderboard():
+    # Load the leaderboard from a file
+    with open("leaderboard.txt", "r") as f:
+        leaderboard = [line.strip().split(",") for line in f]
 
     # Create a new list that only contains entries where the score is a number
     numeric_leaderboard = [
@@ -332,12 +489,50 @@ else:
     numeric_leaderboard.sort(key=lambda x: int(x[1]), reverse=True)
 
     # Display the leaderboard to the user
-    print("LEADERBOARD")
-    print("-----------")
+    leaderboard_text = "LEADERBOARD\n-----------\n"
     for i, (name, score) in enumerate(numeric_leaderboard):
-        print("{0}. {1}: {2}".format(i+1, name, score))
+        leaderboard_text += "{0}. {1}: {2}\n".format(i+1, name, score)
+
+    QMessageBox.information(None, "Leaderboard", leaderboard_text)
+
+
+def delete_entry():
+    # Load the leaderboard from a file
+    with open("leaderboard.txt", "r") as f:
+        leaderboard = [line.strip().split(",") for line in f]
+
+    # Ask the user for the name of the entry to delete
+    name, ok = QInputDialog.getText(
+        None, "Delete Entry", "Enter the name of the entry to delete:")
+    if ok:
+        name = name.strip()
+    else:
+        return
+
+    # Remove the entry from the leaderboard
+    for i, entry in enumerate(leaderboard):
+        if entry[0] == name:
+            del leaderboard[i]
+            break
 
     # Save the updated leaderboard to a file
     with open("leaderboard.txt", "w") as f:
-        for name, score in numeric_leaderboard:
+        for name, score in leaderboard:
             f.write("{},{}\n".format(name, score))
+
+    QMessageBox.information(None, "Delete Entry", "Entry deleted.")
+
+
+def clear_leaderboard():
+    # Clear the leaderboard file
+    with open("leaderboard.txt", "w") as f:
+        f.write("Name,Score\n")
+
+    QMessageBox.information(None, "Clear Leaderboard", "Leaderboard cleared.")
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec())
