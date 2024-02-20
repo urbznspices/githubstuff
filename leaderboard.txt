@@ -1,4 +1,6 @@
 Arel,61
 Emily,1
+Jett,1
 Sam,0
 Michael Kuper,0
+Noelle,0

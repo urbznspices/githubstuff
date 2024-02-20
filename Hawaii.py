@@ -3,276 +3,345 @@ import os
 import json
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog, QDialog
 
 # Define the list of questions and answers about Hawaii
 questions = [
     {
         "question": "What is the capital of Hawaii?",
-        "answer": "Honolulu"
+        "choices": ["A. Honolulu", "B. Hilo", "C. Kona", "Lahaina"],
+        "answer": "A. Honolulu"
     },
+
     {
         "question": "What is the name of the active volcano on the Big Island of Hawaii?",
-        "answer": "Kilauea"
+        "choices": ["A. Mauna Kea", "B. Mauna Loa", "C. Kilauea", "D. Haleakala"],
+        "answer": "C. Kilauea"
     },
     {
         "question": "What is the name of the famous beach on the North Shore of Oahu?",
-        "answer": "Waimea Bay"
+        "choices": ["A. Waikiki", "B. Lanikai", "C. Waimea Bay", "D. Hanauma Bay"],
+        "answer": "C. Waimea Bay"
     },
     {
         "question": "What is the name of the Hawaiian dish made with raw fish?",
-        "answer": "Poke"
+        "choices": ["A. Poke", "B. Lomi Lomi Salmon", "C. Kalua Pig", "D. Laulau"],
+        "answer": "A. Poke"
     },
     {
         "question": "What is the name of the Hawaiian goddess of fire and volcanoes?",
-        "answer": "Pele"
+        "choices": ["A. Pele", "B. Hi'iaka", "C. Laka", "D. Kapo"],
+        "answer": "A. Pele"
     },
     {
         "question": "What is the name of the Hawaiian king who united the islands?",
-        "answer": "Kamehameha"
+        "choices": ["A. Kalakaua", "B. Kamehameha", "C. Lunalilo", "D. Kamehameha II"],
+        "answer": "B. Kamehameha"
     },
     {
         "question": "What is the name of the Hawaiian flower necklace?",
-        "answer": "Lei"
+        "choices": ["A. Haku", "B. Lei", "C. Kukui", "D. Maile"],
+        "answer": "B. Lei"
     },
     {
         "question": "What is the name of the Hawaiian instrument made from a gourd?",
-        "answer": "Ukulele"
+        "choices": ["A. Steel Guitar", "B. Ukulele", "C. Slack Key Guitar", "D. Ipu Heke"],
+        "answer": "B. Ukulele"
     },
     {
         "question": "What is the name of the Hawaiian word for hello?",
-        "answer": "Aloha"
+        "choices": ["A. Mahalo", "B. Aloha", "C. Ohana", "D. Ono"],
+        "answer": "B. Aloha"
     },
     {
         "question": "What is the name of the Hawaiian word for goodbye?",
-        "answer": "Aloha"
+        "choices": ["A. Mahalo", "B. Ohana", "C. Aloha", "D. Ono"],
+        "answer": "C. Aloha"
     },
     {
         "question": "What is the name of the Hawaiian word for thank you?",
-        "answer": "Mahalo"
+        "choices": ["A. Aloha", "B. Ohana", "C. Ono", "D. Mahalo"],
+        "answer": "D. Mahalo"
     },
     {
         "question": "What is the name of the Hawaiian word for family?",
-        "answer": "Ohana"
+        "choices": ["A. Mahalo", "B. Ohana", "C. Aloha", "D. Ono"],
+        "answer": "B. Ohana"
     },
     {
         "question": "What is the name of the Hawaiian word for delicious?",
-        "answer": "Ono"
+        "choices": ["A. Mahalo", "B. Ohana", "C. Aloha", "D. Ono"],
+        "answer": "D. Ono"
     },
     {
         "question": "What is the name of the Hawaiian word for love?",
-        "answer": "Aloha"
+        "choices": ["A. Mahalo", "B. Ohana", "C. Aloha", "D. Ono"],
+        "answer": "C. Aloha"
     },
     {
         "question": "What is the name of the Hawaiian word for ocean?",
-        "answer": "Kai"
+        "choices": ["A. Kai", "B. Wai", "C. Anuenue", "D. Honu"],
+        "answer": "A. Kai"
     },
     {
         "question": "What is the name of the Hawaiian word for mountain?",
-        "answer": "Mauna"
+        "choices": ["A. Kai", "B. Wai", "C. Anuenue", "D. Mauna"],
+        "answer": "D. Mauna"
     },
     {
         "question": "What is the name of the Hawaiian word for water?",
-        "answer": "Wai"
+        "choices": ["A. Kai", "B. Wai", "C. Anuenue", "D. Honu"],
+        "answer": "B. Wai"
     },
     {
         "question": "What is the name of the Hawaiian word for rainbow?",
-        "answer": "Anuenue"
+        "choices": ["A. Kai", "B. Wai", "C. Anuenue", "D. Honu"],
+        "answer": "C. Anuenue"
     },
     {
         "question": "What is the name of the Hawaiian word for turtle?",
-        "answer": "Honu"
+        "choices": ["A. Kai", "B. Wai", "C. Anuenue", "D. Honu"],
+        "answer": "D. Honu"
     },
     {
         "question": "What is the name of the Hawaiian word for shark?",
-        "answer": "Mano"
+        "choices": ["A. Pua", "B. I'a", "C. Mano", "D. Hoku"],
+        "answer": "C. Mano"
     },
     {
         "question": "What is the name of the Hawaiian word for fish?",
-        "answer": "I'a"
+        "choices": ["A. Pua", "B. Hoku", "C. Mano", "D. I'a"],
+        "answer": "D. I'a"
     },
     {
         "question": "What is the name of the Hawaiian word for flower?",
-        "answer": "Pua"
+        "choices": ["A. I'a", "B. Hoku", "C. Mano", "D. Pua"],
+        "answer": "D. Pua"
     },
     {
         "question": "What is the name of the Hawaiian word for star?",
-        "answer": "Hoku"
+        "choices": ["A. I'a", "B. Pua", "C. Mano", "D. Hoku"],
+        "answer": "D. Hoku"
     },
     {
         "question": "What is the name of the Hawaiian word for sun?",
-        "answer": "La"
+        "choices": ["A. I'a", "B. Hoku", "C. La", "D. Hoku"],
+        "answer": "C. La"
     },
     {
         "question": "What is the name of the Hawaiian word for moon?",
-        "answer": "Mahina"
+        "choices": ["A. Aloha", "B. Makani", "C. La", "D. Mahina"],
+        "answer": "D. Mahina"
     },
     {
         "question": "What is the name of the Hawaiian word for wind?",
-        "answer": "Makani"
+        "choices": ["A. Mauka", "B. Mahina", "C. Makani", "D. Makai"],
+        "answer": "D. Makani"
     },
     {
         "question": "What is the name of the Hawaiian word for rain?",
-        "answer": "Ua"
+        "choices": ["A. Mauka", "B. Waiwai", "C. Makani", "D. Ua"],
+        "answer": "D. Ua"
     },
     {
         "question": "What is the largest town on the Big Island?",
-        "answer": "Hilo"
+        "choices": ["A. Kona", "B. Hilo", "C. Waimea", "D. Pahoa"],
+        "answer": "B. Hilo"
     },
     {
         "question": "What is the name of the town on the Big Island where the Kona coffee is grown?",
-        "answer": "Kona"
+        "choices": ["A. Hilo", "B. Waimea", "C. Kona", "D. Pahoa"],
+        "answer": "C. Kona"
     },
     {
         "question": "What is the name of the town in between Kona and Hilo on the Big Island? (Arel lives here)",
-        "answer": "Waimea"
+        "choices": ["A. Waimea", "B. Pahoa", "C. Honokaa", "D. Kealakekua"],
+        "answer": "A. Waimea"
     },
     {
         "question": "What is the name of the tallest mountain in the world? (It's in Hawaii)",
-        "answer": "Mauna Kea"
+        "choices": ["A. Mount Everest", "B. Mauna Loa", "C. Mauna Kea", "D. Kilauea"],
+        "answer": "C. Mauna Kea"
     },
     {
         "question": "How many freeways are there on the Big Island?",
-        "answer": "Zero"
+        "choices": ["A. One", "B. Two", "C. Three", "D. Zero"],
+        "answer": "D. Zero"
     },
     {
         "question": "What year did Hawaii become a state?",
-        "answer": "1959"
+        "choices": ["A. 1959", "B. 1898", "C. 1778", "D. 500"],
+        "answer": "A. 1959"
     },
     {
         "question": "What year did Hawaii become a US territory?",
-        "answer": "1898"
+        "choices": ["A. 1959", "B. 1898", "C. 1778", "D. 500"],
+        "answer": "B. 1898"
     },
     {
         "question": "What year did Captain Cook discover Hawaii?",
-        "answer": "1778"
+        "choices": ["A. 1959", "B. 1898", "C. 1778", "D. 500"],
+        "answer": "C. 1778"
     },
     {
         "question": "What year did the first Polynesians arrive in Hawaii?",
-        "answer": "500"
+        "choices": ["A. 1959", "B. 1898", "C. 1778", "D. 500"],
+        "answer": "D. 500"
     },
     {
         "question": "What year did the first Hawaiians arrive in Hawaii?",
-        "answer": "300"
+        "choices": ["A. 1400", "B. 300", "C. 800", "D. 500"],
+        "answer": "B. 300"
     },
     {
         "question": "Who was the last Hawaiian monarch?",
-        "answer": "Queen Liliuokalani"
+        "choices": ["A. King Kamehameha", "B. Queen Liliuokalani", "C. King Kalakaua", "D. King Kamehameha II"],
+        "answer": "B. Queen Liliuokalani"
     },
     {
         "question": "What is the largest island in Hawaii?",
-        "answer": "Big Island"
+        "choices": ["A. Oahu", "B. Maui", "C. Kauai", "D. Big Island"],
+        "answer": "D. Big Island"
     },
     {
         "question": "What is the second largest island in Hawaii?",
-        "answer": "Maui"
+        "choices": ["A. Oahu", "B. Maui", "C. Kauai", "D. Big Island"],
+        "answer": "B. Maui"
     },
     {
         "question": "What is the third largest island in Hawaii?",
-        "answer": "Oahu"
+        "choices": ["A. Oahu", "B. Maui", "C. Kauai", "D. Big Island"],
+        "answer": "A. Oahu"
     },
     {
         "question": "What is the smallest island in Hawaii?",
-        "answer": "Kahoolawe"
+        "choices": ["A. Kahoolawe", "B. Niihau", "C. Lanai", "D. Big Island"],
+        "answer": "A. Kahoolawe"
     },
     {
         "question": "What is the name of the island in Hawaii where the state capital is located?",
-        "answer": "Oahu"
+        "choices": ["A. Maui", "B. Oahu", "C. Kauai", "D. Big Island"],
+        "answer": "B. Oahu"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous road to Hana is located?",
-        "answer": "Maui"
+        "choices": ["A. Maui", "B. Oahu", "C. Kauai", "D. Big Island"],
+        "answer": "A. Maui"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous Waikiki beach is located?",
-        "answer": "Oahu"
+        "choices": ["A. Maui", "B. Kauai", "C. Oahu", "D. Big Island"],
+        "answer": "C. Oahu"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous lava flows are located?",
-        "answer": "Big Island"
+        "choices": ["A. Maui", "B. Kauai", "C. Oahu", "D. Big Island"],
+        "answer": "D. Big Island"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous leper colony is located?",
-        "answer": "Molokai"
+        "choices": ["A. Maui", "B. Kauai", "C. Oahu", "D. Molokai"],
+        "answer": "D. Molokai"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous Napali coast is located?",
-        "answer": "Kauai"
+        "choices": ["A. Maui", "B. Kauai", "C. Oahu", "D. Big Island"],
+        "answer": "B. Kauai"
     },
     {
         "question": "On what battleship does the Pearl Harbor memorial sit?",
-        "answer": "USS Arizona"
+        "choices": ["A. USS Missouri", "B. USS Arizona", "C. USS Oklahoma", "D. USS California"],
+        "answer": "B. USS Arizona"
     },
     {
         "question": "What is the name of the royal palace in Honolulu?",
-        "answer": "Iolani Palace"
+        "choices": ["A. Iolani Palace", "B. Queen's Palace", "C. King's Palace", "D. Prince's Palace"],
+        "answer": "A. Iolani Palace"
     },
     {
-        "question": "What is the name of the school located in Honolulu that President Obama attended?",
-        "answer": "Punahou"
+        "question": "What is the name of the school located in Honolulu that former President Obama attended?",
+        "choices": ["A. Kamehameha", "B. Iolani", "C. Punahou", "D. Mid-Pacific"],
+        "answer": "C. Punahou"
     },
     {
         "question": "What is the name of the school located in Waimea that Arel attended?",
-        "answer": "Hawaii Preparatory Academy"
+        "choices": ["A. Kamehameha", "B. Iolani", "C. Punahou", "D. Hawaii Preparatory Academy"],
+        "answer": "D. Hawaii Preparatory Academy"
     },
     {
         "question": "What is the mascot of the University of Hawaii at Manoa?",
-        "answer": "Rainbow Warriors"
+        "choices": ["A. Rainbow Warriors", "B. Vulcans", "C. Rainbows", "D. Warriors"],
+        "answer": "A. Rainbow Warriors"
     },
     {
         "question": "What is the mascot of the University of Hawaii at Hilo?",
-        "answer": "Vulcans"
+        "choices": ["A. Vikings", "B. Warriors", "C. Vulcans", "D. Sharks"],
+        "answer": "C. Vulcans"
     },
     {
         "question": "How many islands are in Hawaii?",
-        "answer": "8"
+        "choices": ["A. 8", "B. 6", "C. 4", "D. 10"],
+        "answer": "A. 8"
     },
     {
         "question": "What is the name of the island in Hawaii where the famous pineapple is grown?",
-        "answer": "Oahu"
+        "choices": ["A. Maui", "B. Oahu", "C. Kauai", "D. Lanai"],
+        "answer": "B. Oahu"
     },
     {
         "question": "How do you say 'Merry Christmas' in Hawaiian?",
-        "answer": "Mele Kalikimaka"
+        "choices": ["A. Hau'oli La Hanau", "B. Hau'oli Makahiki Hou", "C. Mele Kalikimaka", "D. Aloha Au Ia 'Oe"],
+        "answer": "C. Mele Kalikimaka"
     },
     {
         "question": "How do you say 'Happy New Year' in Hawaiian?",
-        "answer": "Hau'oli Makahiki Hou"
+        "choices": ["A. Hau'oli La Hanau", "B. Hau'oli Makahiki Hou", "C. Mele Kalikimaka", "D. Aloha Au Ia 'Oe"],
+        "answer": "B. Hau'oli Makahiki Hou"
     },
     {
         "question": "How do you say 'Happy Birthday' in Hawaiian?",
-        "answer": "Hau'oli La Hanau"
+        "choices": ["A. Hau'oli Makahiki Hou", "B. Mele Kalikimaka", "C. Hau'oli La Hanau", "D. Aloha Au Ia 'Oe"],
+        "answer": "C. Hau'oli La Hanau"
     },
     {
         "question": "How do you say 'I love you' in Hawaiian?",
-        "answer": "Aloha Au Ia 'Oe"
+        "choices": ["A. Hau'oli Makahiki Hou", "B. Mele Kalikimaka", "C. Hau'oli La Hanau", "D. Aloha Au Ia 'Oe"],
+        "answer": "D. Aloha Au Ia 'Oe"
     },
     {
         "question": "How do you say 'perseverance' in Hawaiian?",
-        "answer": "Ho'omau"
+        "choices": ["A. Kuleana", "B. Ho'omau", "C. Laulima", "D. Malama"],
+        "answer": "B. Ho'omau"
     },
     {
         "question": "Who is the famous Hawaiian surfer who popularized surfing in the 1950s?",
-        "answer": "Duke Kahanamoku"
+        "choices": ["A. Eddie Aikau", "B. Duke Kahanamoku", "C. Laird Hamilton", "D. Bethany Hamilton"],
+        "answer": "B. Duke Kahanamoku"
     },
     {
-        "question": "What is the name of the most famous Hawaiian baseball player?",
-        "answer": "Shane Victorino"
+        "question": "What is the name of the most famous Hawaiian baseball player? (According to Wikipedia)",
+        "choices": ["A. Shane Victorino", "B. Kolten Wong", "C. Kurt Suzuki", "D. Brandon League"],
+        "answer": "A. Shane Victorino"
     },
     {
-        "question": "What is the name of the most famous Hawaiian football player?",
-        "answer": "Marcus Mariota"
+        "question": "What is the name of the most famous Hawaiian football player? (According to Wikipedia)",
+        "choices": ["A. Marcus Mariota", "B. Tua Tagovailoa", "C. Manti Te'o", "D. Max Unger"],
+        "answer": "A. Marcus Mariota"
     },
     {
         "question": "What is the name of the president in office that refused to annex Hawaii?",
-        "answer": "Grover Cleveland"
+        "choices": ["A. Theodore Roosevelt", "B. William McKinley", "C. Grover Cleveland", "D. William Taft"],
+        "answer": "C. Grover Cleveland"
     },
     {
         "question": "What is the name of the president in office that annexed Hawaii?",
-        "answer": "William McKinley"
+        "choices": ["A. Theodore Roosevelt", "B. William McKinley", "C. Grover Cleveland", "D. William Taft"],
+        "answer": "B. William McKinley"
     },
     {
         "question": "What is the name of the president in office when Hawaii became a state?",
-        "answer": "Dwight Eisenhower", "answer": "Dwight D. Eisenhower"
+        "choices": ["A. Dwight Eisenhower", "B. John F. Kennedy", "C. Lyndon B. Johnson", "D. Richard Nixon"],
+        "answer": "A. Dwight Eisenhower"
     }
 ]
 
@@ -308,11 +377,11 @@ class MainWindow(QMainWindow):
         start_game()
 
     def view_leaderboard(self):
-        leaderboard_window = LeaderboardWindow()
-        leaderboard_window.show()
+        leaderboard_dialog = LeaderboardDialog()
+        leaderboard_dialog.exec()
 
 
-class LeaderboardWindow(QMainWindow):
+class LeaderboardDialog(QDialog):
     def __init__(self):
         super().__init__()
 
@@ -349,6 +418,46 @@ class LeaderboardWindow(QMainWindow):
             leaderboard = [line.strip().split(",") for line in f]
 
         # Display the leaderboard
+        leaderboard_text = ""
+        for entry in leaderboard:
+            leaderboard_text += f"Name: {entry[0]}, Score: {entry[1]}\n"
+
+        QMessageBox.information(self, "Leaderboard", leaderboard_text)
+
+    def delete_entry(self):
+        # Get the name of the entry to delete
+        name, ok = QInputDialog.getText(
+            self, "Delete Entry", "Enter the name of the entry to delete:")
+
+        if ok:
+            # Load the leaderboard from a file
+            with open("leaderboard.txt", "r") as f:
+                leaderboard = [line.strip().split(",") for line in f]
+
+            # Find and remove the entry
+            updated_leaderboard = [
+                entry for entry in leaderboard if entry[0] != name]
+
+            # Save the updated leaderboard to the file
+            with open("leaderboard.txt", "w") as f:
+                for entry in updated_leaderboard:
+                    f.write(f"{entry[0]},{entry[1]}\n")
+
+            QMessageBox.information(
+                self, "Delete Entry", "Entry deleted successfully.")
+
+    def clear_leaderboard(self):
+        # Confirm the action
+        reply = QMessageBox.question(self, "Clear Leaderboard", "Are you sure you want to clear the leaderboard?",
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Clear the leaderboard file
+            with open("leaderboard.txt", "w") as f:
+                f.write("")
+
+            QMessageBox.information(
+                self, "Clear Leaderboard", "Leaderboard cleared successfully.")
         leaderboard_text = ""
         for entry in leaderboard:
             leaderboard_text += f"{entry[0]} - {entry[1]}\n"
@@ -425,12 +534,17 @@ def start_game():
 
     # Loop through the questions and ask the user each question
     for question in questions:
-        answer, ok = QInputDialog.getText(
-            None, "Hawaii Trivia Game", question["question"])
+        answer, ok = QInputDialog.getItem(
+            None, "Hawaii Trivia Game", question["question"], question["choices"] + ["Quit"], editable=False)
         if ok:
             answer = answer.strip()
         else:
             return
+
+        if answer.lower() == "quit":
+            QMessageBox.information(
+                None, "Hawaii Trivia Game", "Game ended. Your final score is: " + str(score))
+            break
 
         if answer.lower() == question["answer"].lower():
             QMessageBox.information(None, "Hawaii Trivia Game", "Correct!")
@@ -466,9 +580,11 @@ def start_game():
         # Display the leaderboard to the user
         leaderboard_text = "LEADERBOARD\n-----------\n"
         for i, (name, score) in enumerate(numeric_leaderboard):
-            leaderboard_text += "{0}. {1}: {2}\n".format(i+1, name, score)
+            leaderboard_text += "{0}. {1}: {2}\n".format(
+                i+1, name, score)
 
-        QMessageBox.information(None, "Hawaii Trivia Game", leaderboard_text)
+        QMessageBox.information(
+            None, "Hawaii Trivia Game", leaderboard_text)
 
         # Save the updated leaderboard to a file
         with open("leaderboard.txt", "w") as f:
@@ -536,3 +652,30 @@ if __name__ == "__main__":
     main_window = MainWindow()
     main_window.show()
     sys.exit(app.exec())
+
+    class MainWindow(QMainWindow):
+        def __init__(self):
+            super().__init__()
+
+            # Set window title and size
+            self.setWindowTitle("Hawaii Trivia Game")
+            self.setGeometry(100, 100, 400, 300)
+
+            # Create menu labels
+            self.menu_label = QLabel("MENU", self)
+            self.menu_label.setGeometry(150, 50, 100, 30)
+
+            # Create buttons
+            self.start_button = QPushButton("Start Game", self)
+            self.start_button.setGeometry(100, 100, 200, 30)
+
+            self.leaderboard_button = QPushButton("Leaderboard", self)
+            self.leaderboard_button.setGeometry(100, 150, 200, 30)
+
+            self.quit_button = QPushButton("Quit", self)
+            self.quit_button.setGeometry(100, 200, 200, 30)
+
+            # Connect button signals to slots
+            self.start_button.clicked.connect(self.start_game)
+            self.leaderboard_button.clicked.connect(self.view_leaderboard)
+            self.quit_button.clicked.connect(self.close)
