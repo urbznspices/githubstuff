@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Leaderboard</title>
+	</head>
+	<body>
+		<h1>Leaderboard</h1>
+		<p>Here are the top scores:</p>
+		<ol>
+			{% for i in range(leaderboard_length) %} {% set entry =
+			leaderboard[i] %}
+			<li>{{ i + 1 }}. {{ entry[0] }}: {{ entry[1] }}</li>
+			{% endfor %}
+		</ol>
+	</body>
+</html>

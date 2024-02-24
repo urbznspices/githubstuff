@@ -1,2 +1,4 @@
 Arel,20
 Mercy,18
+Bryan,10
+test,9

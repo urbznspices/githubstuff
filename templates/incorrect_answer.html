@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Incorrect Answer</title>
+	</head>
+	<body>
+		<h1>Incorrect!</h1>
+		<p>Your answer was incorrect.</p>
+		<p>The correct answer is: <strong>{{ correct_answer }}</strong></p>
+		<a href="{{ url_for('ask_question') }}">Next Question</a>
+	</body>
+</html>

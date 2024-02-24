@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Question</title>
+	</head>
+	<body>
+		<header>
+			<h1>Question {{ current_question_index }} of 20</h1>
+		</header>
+		<main>
+			<form method="post">
+				<p>{{ question.question }}</p>
+				<select name="answer">
+					<option value="" selected disabled>Select Answer</option>
+					{% for choice in question.choices %}
+					<option value="{{ choice }}">{{ choice }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit">Submit</button>
+			</form>
+		</main>
+	</body>
+</html>
