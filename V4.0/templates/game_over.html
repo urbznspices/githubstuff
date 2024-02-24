@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Game Over</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #e6f7ff; /* Light blue background */
+				color: #004085; /* Dark blue text */
+				margin: 0;
+				padding: 0;
+				text-align: center;
+			}
+
+			h1 {
+				margin-top: 50px;
+			}
+
+			h2 {
+				margin-top: 30px;
+			}
+
+			ol {
+				list-style-type: none;
+				padding: 0;
+				margin-top: 20px;
+			}
+
+			li {
+				margin-bottom: 10px;
+			}
+
+			.menu-link {
+				text-decoration: none;
+				color: white;
+			}
+
+			.menu-button {
+				background-color: #007bff; /* Dark blue button */
+				color: white;
+				border: none;
+				border-radius: 5px;
+				padding: 10px 20px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				margin-top: 20px; /* Added margin */
+			}
+
+			.menu-button:hover {
+				background-color: #0056b3; /* Darker blue on hover */
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Game Over</h1>
+		<p>Your final score is: {{ score }}</p>
+
+		<h2>Leaderboard</h2>
+		<ol>
+			{% for entry in leaderboard %}
+			<li>{{ entry[0] }}: {{ entry[1] }}</li>
+			{% endfor %}
+		</ol>
+
+		<a href="/" class="menu-link"
+			><button class="menu-button">Main Menu</button></a
+		>
+	</body>
+</html>

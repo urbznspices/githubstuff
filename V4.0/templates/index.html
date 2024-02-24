@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Hawaii Trivia Game</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f0f7fc; /* Light blue background */
+				color: #333; /* Dark gray text */
+				margin: 0;
+				padding: 0;
+				text-align: center;
+				position: relative; /* Make the body a positioning context */
+			}
+
+			h1 {
+				color: #1e488f; /* Dark blue heading */
+				margin-top: 50px;
+			}
+
+			p {
+				margin: 20px 0;
+			}
+
+			.button {
+				display: inline-block;
+				padding: 10px 20px;
+				background-color: #1e488f; /* Dark blue button */
+				color: white;
+				text-decoration: none;
+				border-radius: 5px;
+				margin-right: 10px;
+				transition: background-color 0.3s ease;
+			}
+
+			.button:hover {
+				background-color: #0d2a5f; /* Darker blue on hover */
+			}
+
+			/* Style the SVG */
+			svg {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: auto;
+				z-index: -1; /* Ensure the SVG is behind other content */
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Welcome to the Hawaii Trivia Game</h1>
+		<p>Test your knowledge of Hawaii with this trivia game!</p>
+		<p>Click the button below to start the game or view the leaderboard:</p>
+		<a href="/start_game" class="button">Start Game</a>
+		<a href="/view_leaderboard" class="button">View Leaderboard</a>
+
+		<!-- SVG of the state of Hawaii -->
+		<svg viewBox="0 0 600 400">
+			<!-- Example path representing the state of Hawaii -->
+			<path
+				fill="#89cff0"
+				d="M10,200 Q300,300 600,200 Q300,100 10,200 Z"
+			/>
+		</svg>
+	</body>
+</html>

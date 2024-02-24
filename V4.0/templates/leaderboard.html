@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Leaderboard</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f0f0f0;
+				color: #333;
+				margin: 0;
+				padding: 20px; /* Added padding */
+			}
+			h1 {
+				text-align: center;
+				color: #007bff;
+			}
+			ol {
+				list-style-type: none;
+				padding: 0;
+				margin: 0;
+			}
+			li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc;
+				text-align: center; /* Center the scores */
+			}
+			li:last-child {
+				border-bottom: none;
+			}
+			.menu-link {
+				text-decoration: none;
+				color: white;
+			}
+			.menu-button {
+				background-color: #6c757d; /* Gray button */
+				padding: 10px 20px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				margin-top: 20px; /* Added margin */
+			}
+			.menu-button:hover {
+				background-color: #5a6268; /* Darker gray on hover */
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Leaderboard</h1>
+		<p>Here are the top scores:</p>
+		<ol>
+			{% for i in range(leaderboard_length) %} {% set entry =
+			leaderboard[i] %}
+			<li>{{ i + 1 }}. {{ entry[0] }}: {{ entry[1] }}</li>
+			{% endfor %}
+		</ol>
+		<a href="/" class="menu-link"
+			><button class="menu-button">Main Menu</button></a
+		>
+	</body>
+</html>

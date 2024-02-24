@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Start Game</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f0f7fc; /* Light blue background */
+				color: #333; /* Dark gray text */
+				margin: 0;
+				padding: 0;
+				display: flex;
+				justify-content: center; /* Center content horizontally */
+				align-items: center; /* Center content vertically */
+				height: 100vh; /* Full height */
+			}
+
+			h1 {
+				color: #1e488f; /* Dark blue heading */
+			}
+
+			h2 {
+				color: #1e488f; /* Dark blue heading */
+			}
+
+			form {
+				margin-top: 20px;
+				max-width: 400px; /* Limit form width */
+				width: 100%;
+				padding: 0 20px; /* Add padding to the sides */
+			}
+
+			label {
+				display: block;
+				margin-bottom: 5px;
+				color: #1e488f; /* Dark blue text */
+			}
+
+			input[type="text"] {
+				width: calc(100% - 22px); /* Adjust width */
+				padding: 10px;
+				margin-bottom: 10px;
+				border: 1px solid #ccc; /* Light gray border */
+				border-radius: 5px;
+			}
+
+			button {
+				padding: 10px 20px;
+				background-color: #1e488f; /* Dark blue button */
+				color: white;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: #0d2a5f; /* Darker blue on hover */
+			}
+
+			select {
+				width: calc(100% - 22px); /* Adjust width */
+				padding: 10px;
+				margin-bottom: 10px;
+				border: 1px solid #ccc; /* Light gray border */
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Welcome to the Hawaii Trivia Game</h1>
+		{% if question %}
+		<h2>Question:</h2>
+		<p>{{ question.question }}</p>
+		<form action="/submit_answer" method="post">
+			<input type="hidden" name="name" value="{{ session['name'] }}" />
+			<input
+				type="hidden"
+				name="question_index"
+				value="{{ current_question_index }}"
+			/>
+			<select name="answer">
+				<option value="" disabled selected>Select Answer</option>
+				{% for choice in question.choices %}
+				<option value="{{ choice }}">{{ choice }}</option>
+				{% endfor %}
+			</select>
+			<button type="submit">Submit Answer</button>
+		</form>
+		{% else %}
+		<form action="/start_game" method="post">
+			<label for="name">Enter your name:</label>
+			<input type="text" id="name" name="name" style="width: 100%" />
+			<!-- Adjusted width -->
+			<button type="submit">Start Game</button>
+			{% if error %}
+			<p>{{ error }}</p>
+			{% endif %}
+		</form>
+		{% endif %}
+	</body>
+</html>
