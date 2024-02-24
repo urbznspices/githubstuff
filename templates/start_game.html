@@ -11,6 +11,10 @@
 				color: #333; /* Dark gray text */
 				margin: 0;
 				padding: 0;
+				display: flex;
+				justify-content: center; /* Center content horizontally */
+				align-items: center; /* Center content vertically */
+				height: 100vh; /* Full height */
 			}
 
 			h1 {
@@ -23,6 +27,9 @@
 
 			form {
 				margin-top: 20px;
+				max-width: 400px; /* Limit form width */
+				width: 100%;
+				padding: 0 20px; /* Add padding to the sides */
 			}
 
 			label {
@@ -32,7 +39,7 @@
 			}
 
 			input[type="text"] {
-				width: 100%;
+				width: calc(100% - 22px); /* Adjust width */
 				padding: 10px;
 				margin-bottom: 10px;
 				border: 1px solid #ccc; /* Light gray border */
@@ -53,7 +60,7 @@
 			}
 
 			select {
-				width: 100%;
+				width: calc(100% - 22px); /* Adjust width */
 				padding: 10px;
 				margin-bottom: 10px;
 				border: 1px solid #ccc; /* Light gray border */
@@ -84,7 +91,8 @@
 		{% else %}
 		<form action="/start_game" method="post">
 			<label for="name">Enter your name:</label>
-			<input type="text" id="name" name="name" />
+			<input type="text" id="name" name="name" style="width: 100%" />
+			<!-- Adjusted width -->
 			<button type="submit">Start Game</button>
 			{% if error %}
 			<p>{{ error }}</p>

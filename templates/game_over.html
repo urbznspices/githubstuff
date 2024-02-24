@@ -31,6 +31,26 @@
 			li {
 				margin-bottom: 10px;
 			}
+
+			.menu-link {
+				text-decoration: none;
+				color: white;
+			}
+
+			.menu-button {
+				background-color: #007bff; /* Dark blue button */
+				color: white;
+				border: none;
+				border-radius: 5px;
+				padding: 10px 20px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				margin-top: 20px; /* Added margin */
+			}
+
+			.menu-button:hover {
+				background-color: #0056b3; /* Darker blue on hover */
+			}
 		</style>
 	</head>
 	<body>
@@ -43,5 +63,9 @@
 			<li>{{ entry[0] }}: {{ entry[1] }}</li>
 			{% endfor %}
 		</ol>
+
+		<a href="/" class="menu-link"
+			><button class="menu-button">Main Menu</button></a
+		>
 	</body>
 </html>

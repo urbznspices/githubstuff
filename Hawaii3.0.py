@@ -512,18 +512,21 @@ def incorrect_answer(correct_answer):
 
 # View leaderboard route
 
-
 @app.route('/view_leaderboard')
 def view_leaderboard():
-    # Load the leaderboard from a file
+    # Load the leaderboard from the file
     leaderboard = []
-    leaderboard_length = len(leaderboard)
-    with open(LEADERBOARD_FILE, "r") as f:
+    with open("leaderboard2.txt", "r") as f:
         for line in f:
             name, score = line.strip().split(",")
             leaderboard.append((name, int(score)))
 
+    # Get the length of the leaderboard
+    leaderboard_length = len(leaderboard)
+
+    # Render the template with the leaderboard data
     return render_template('leaderboard.html', leaderboard=leaderboard, leaderboard_length=leaderboard_length)
+
 
 # Add score to leaderboard route
 

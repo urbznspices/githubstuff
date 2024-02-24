@@ -12,6 +12,7 @@
 				margin: 0;
 				padding: 0;
 				text-align: center;
+				position: relative; /* Make the body a positioning context */
 			}
 
 			h1 {
@@ -37,13 +38,32 @@
 			.button:hover {
 				background-color: #0d2a5f; /* Darker blue on hover */
 			}
+
+			/* Style the SVG */
+			svg {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: auto;
+				z-index: -1; /* Ensure the SVG is behind other content */
+			}
 		</style>
 	</head>
 	<body>
 		<h1>Welcome to the Hawaii Trivia Game</h1>
-		<p>Test your knowledge of Hawaii with our trivia game!</p>
+		<p>Test your knowledge of Hawaii with this trivia game!</p>
 		<p>Click the button below to start the game or view the leaderboard:</p>
 		<a href="/start_game" class="button">Start Game</a>
 		<a href="/view_leaderboard" class="button">View Leaderboard</a>
+
+		<!-- SVG of the state of Hawaii -->
+		<svg viewBox="0 0 600 400">
+			<!-- Example path representing the state of Hawaii -->
+			<path
+				fill="#89cff0"
+				d="M10,200 Q300,300 600,200 Q300,100 10,200 Z"
+			/>
+		</svg>
 	</body>
 </html>

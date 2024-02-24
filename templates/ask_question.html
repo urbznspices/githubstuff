@@ -45,10 +45,24 @@
 				border-radius: 5px;
 				cursor: pointer;
 				transition: background-color 0.3s ease;
+				margin-top: 20px; /* Added margin */
 			}
 
 			button:hover {
 				background-color: #0056b3; /* Darker blue on hover */
+			}
+
+			.menu-link {
+				text-decoration: none;
+				color: white;
+			}
+
+			.menu-button {
+				background-color: #6c757d; /* Gray button */
+			}
+
+			.menu-button:hover {
+				background-color: #5a6268; /* Darker gray on hover */
 			}
 		</style>
 	</head>
@@ -67,6 +81,9 @@
 				</select>
 				<button type="submit">Submit</button>
 			</form>
+			<a href="/" class="menu-link"
+				><button class="menu-button">Main Menu</button></a
+			>
 		</main>
 	</body>
 </html>
