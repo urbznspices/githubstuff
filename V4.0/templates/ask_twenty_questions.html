@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Question</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #e6f7ff; /* Light blue background */
+				color: #004085; /* Dark blue text */
+				margin: 0;
+				padding: 0;
+				text-align: center;
+			}
+
+			header {
+				background-color: #cce5ff; /* Lighter blue header background */
+				padding: 20px 0;
+			}
+
+			h1 {
+				margin: 0;
+			}
+
+			main {
+				padding: 20px;
+			}
+
+			p {
+				margin: 20px 0;
+			}
+
+			select {
+				padding: 10px;
+				border-radius: 5px;
+				border: 1px solid #b8daff; /* Light blue border */
+			}
+
+			button {
+				padding: 10px 20px;
+				background-color: #007bff; /* Dark blue button */
+				color: white;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				margin-top: 20px; /* Added margin */
+			}
+
+			button:hover {
+				background-color: #0056b3; /* Darker blue on hover */
+			}
+
+			.menu-link {
+				text-decoration: none;
+				color: white;
+			}
+
+			.menu-button {
+				background-color: #6c757d; /* Gray button */
+			}
+
+			.menu-button:hover {
+				background-color: #5a6268; /* Darker gray on hover */
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Question {{ current_question_index }} of 20</h1>
+		</header>
+		<main>
+			<form method="post">
+				<p>{{ question.question }}</p>
+				<select name="answer">
+					<option value="" selected disabled>Select Answer</option>
+					{% for choice in question.choices %}
+					<option value="{{ choice }}">{{ choice }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit">Submit</button>
+			</form>
+			<a href="/" class="menu-link"
+				><button class="menu-button">Main Menu</button></a
+			>
+		</main>
+	</body>
+</html>

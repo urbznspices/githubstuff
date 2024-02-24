@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Endless Leaderboard</title>
+		<style>
+			/* Add your CSS styles here */
+		</style>
+	</head>
+	<body>
+		<h1>Endless Mode Leaderboard</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>Rank</th>
+					<th>Name</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% set rank = 1 %} {% for entry in leaderboard %}
+				<tr>
+					<td>{{ rank }}</td>
+					<td>{{ entry[0] }}</td>
+					<td>{{ entry[1] }}</td>
+				</tr>
+				{% set rank = rank + 1 %} {% endfor %}
+			</tbody>
+		</table>
+	</body>
+</html>

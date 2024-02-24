@@ -1,0 +1,21 @@
+<!-- start_twenty_questions_game.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Start Twenty Questions Game</title>
+	</head>
+	<body>
+		<h1>Welcome to the Twenty Questions Game!</h1>
+		<form
+			action="{{ url_for('start_twenty_questions_game') }}"
+			method="POST"
+		>
+			<label for="name">Enter your name:</label>
+			<input type="text" id="name" name="name" required />
+			<button type="submit">Start Game</button>
+		</form>
+	</body>
+</html>

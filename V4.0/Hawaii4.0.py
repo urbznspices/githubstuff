@@ -410,16 +410,120 @@ LEADERBOARD_FILE = "leaderboard3.txt"
 
 # Home page
 
+# New game mode: Answer as many questions as you can until you get three wrong
+
+
+@app.route('/endless_mode')
+def endless_mode():
+    # Initialize session variables for the endless mode
+    session['score'] = 0
+    session['wrong_answers'] = 0
+    session['current_question_index'] = 0
+
+    # Shuffle the questions and store them in the session
+    shuffled_questions = list(questions)
+    shuffle(shuffled_questions)
+    session['shuffled_questions'] = shuffled_questions
+
+    # Redirect to the first question
+    return redirect(url_for('endless_question'))
+
+
+@app.route('/endless_question', methods=['GET', 'POST'])
+def endless_question():
+    # Retrieve the current question index from the session
+    current_question_index = session.get('current_question_index', 0)
+
+    # Check if the user has answered three questions wrong
+    if session.get('wrong_answers', 0) >= 3:
+        # Redirect to the game over screen for the endless mode
+        return redirect(url_for('endless_game_over'))
+
+    # Get the current question
+    question = session['shuffled_questions'][current_question_index]
+    # Shuffle the choices
+    shuffled_choices = sample(question['choices'], len(question['choices']))
+    # Update the question with shuffled choices
+    question['choices'] = shuffled_choices
+
+    if request.method == 'POST':
+        # Retrieve the user's answer from the form
+        answer = request.form.get('answer')
+        # Get the correct answer for the current question
+        correct_answer = question['answer']
+
+        # Check if the answer is correct
+        if answer == correct_answer:
+            # Increment the user's score
+            session['score'] = session.get('score', 0) + 1
+
+            # Increment the question index
+            session['current_question_index'] = current_question_index + 1
+
+            # Redirect to the next question
+            return redirect(url_for('endless_question'))
+
+        else:
+            # Increment the wrong answers count
+            session['wrong_answers'] = session.get('wrong_answers', 0) + 1
+
+            # Increment the question index
+            session['current_question_index'] = current_question_index + 1
+
+            # Redirect to the next question
+            return redirect(url_for('endless_question'))
+
+    # Render the template for displaying the question in the endless mode
+    return render_template('endless_question.html', question=question, current_question_index=current_question_index + 1)
+
+
+@app.route('/endless_game_over')
+def endless_game_over():
+    # Retrieve the final score from the session
+    score = session.get('score', 0)
+
+    # Render the game over screen for the endless mode
+    return render_template('endless_game_over.html', score=score)
+
+# Modify the home page to include buttons for both game modes
+
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-# Start game route
+    return render_template('home.html')
 
 
 @app.route('/start_game', methods=['GET', 'POST'])
 def start_game():
+    if request.method == 'POST':
+        mode = request.form.get('mode')
+        # Shuffle the questions and store them in the session
+        shuffled_questions = list(questions)
+        shuffle(shuffled_questions)
+        session['shuffled_questions'] = shuffled_questions
+        if mode == 'twenty_questions':
+            return redirect(url_for('start_twenty_questions_game'))
+        elif mode == 'endless_mode':
+            return redirect(url_for('endless_mode'))
+    return render_template('start_game.html')
+
+
+# Start endless game route
+@app.route('/start_endless_game', methods=['GET', 'POST'])
+def start_endless_game():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        session['name'] = name
+        session['score'] = 0
+
+        # Redirect to the first question
+        return redirect(url_for('ask_endless_question'))
+
+    return render_template('start_endless_game.html')
+
+
+@app.route('/start_twenty_questions_game', methods=['GET', 'POST'])
+def start_twenty_questions_game():
     if request.method == 'POST':
         name = request.form.get('name')
         session['name'] = name
@@ -432,7 +536,7 @@ def start_game():
         session['shuffled_questions'] = shuffled_questions
 
         return redirect(url_for('ask_question'))
-    return render_template('start_game.html')
+    return render_template('start_twenty_questions_game.html')
 
 
 @app.route('/ask_question', methods=['GET', 'POST'])
@@ -498,6 +602,48 @@ def ask_question():
     return render_template('ask_question.html', question=question, current_question_index=current_question_index + 1, total_questions=min(len(questions), 20))
 
 
+@app.route('/ask_endless_question', methods=['GET', 'POST'])
+def ask_endless_question():
+    # Retrieve the current question index from the session
+    current_question_index = session.get('current_question_index', 0)
+
+    # Get the current question
+    question = session['shuffled_questions'][current_question_index]
+    # Shuffle the choices
+    shuffled_choices = sample(question['choices'], len(question['choices']))
+    # Update the question with shuffled choices
+    question['choices'] = shuffled_choices
+
+    if request.method == 'POST':
+        # Retrieve the user's answer from the form
+        answer = request.form.get('answer')
+        # Get the correct answer for the current question
+        correct_answer = question['answer']
+
+        # Check if the answer is correct
+        if answer == correct_answer:
+            # Increment the user's score
+            session['score'] = session.get('score', 0) + 1
+
+        else:
+            # Increment the count of wrong answers
+            session['wrong_answers'] = session.get('wrong_answers', 0) + 1
+
+        # Check if the user has answered three questions wrong
+        if session.get('wrong_answers', 0) >= 3:
+            # Redirect to the game over screen
+            return redirect(url_for('game_over'))
+
+        # Increment the question index
+        session['current_question_index'] = current_question_index + 1
+
+        # Redirect to the next question
+        return redirect(url_for('ask_endl6ess_question'))
+
+    # Render the template for displaying the question
+    return render_template('ask_question.html', question=question, current_question_index=current_question_index + 1, total_questions=len(session['shuffled_questions']))
+
+
 @app.route('/correct_answer')
 def correct_answer():
     # Render the template for correct answer
@@ -512,8 +658,8 @@ def incorrect_answer(correct_answer):
 
 # View leaderboard route
 
-@app.route('/view_leaderboard')
-def view_leaderboard():
+@app.route('/twenty_questions_leaderboard')
+def twenty_questions_leaderboard():
     # Load the leaderboard from the file
     leaderboard = []
     with open("leaderboard3.txt", "r") as f:
@@ -537,7 +683,7 @@ def game_over():
     score = session.get('score', 0)
 
     # Load the leaderboard from a file
-    with open("leaderboard3A.txt", "r") as f:
+    with open("leaderboard3.txt", "r") as f:
         leaderboard = [line.strip().split(",") for line in f]
 
     # Create a new list that only contains entries where the score is a number
@@ -549,6 +695,24 @@ def game_over():
 
     # Render the game over screen with the final score and leaderboard
     return render_template('game_over.html', score=score, leaderboard=numeric_leaderboard)
+
+# Endless leaderboard route
+
+
+@app.route('/endless_leaderboard')
+def endless_leaderboard():
+    # Load the leaderboard from the file
+    leaderboard = []
+    with open("endless_leaderboard.txt", "r") as f:
+        for line in f:
+            name, score = line.strip().split(",")
+            leaderboard.append((name, int(score)))
+
+    # Get the length of the leaderboard
+    leaderboard_length = len(leaderboard)
+
+    # Render the template with the leaderboard data
+    return render_template('endless_leaderboard.html', leaderboard=leaderboard, leaderboard_length=leaderboard_length)
 
 
 if __name__ == '__main__':
