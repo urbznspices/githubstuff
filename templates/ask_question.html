@@ -23,8 +23,26 @@
 				margin: 0;
 			}
 
+			ol {
+				list-style-type: none;
+				padding: 0;
+				margin: 0;
+			}
+
 			main {
+				display: flex;
+				justify-content: space-between;
 				padding: 20px;
+			}
+
+			.question-section {
+				flex: 1;
+				text-align: left;
+			}
+
+			.leaderboard-section {
+				flex: 1;
+				text-align: left;
 			}
 
 			p {
@@ -64,26 +82,57 @@
 			.menu-button:hover {
 				background-color: #5a6268; /* Darker gray on hover */
 			}
+
+			.leaderboard {
+				margin-top: 20px;
+			}
+
+			.leaderboard ol {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.leaderboard li {
+				margin-bottom: 5px;
+			}
 		</style>
 	</head>
 	<body>
 		<header>
 			<h1>Question {{ current_question_index }} of 20</h1>
+			<div class="score-section">
+				<p>Score: {{ session['score'] }}</p>
+			</div>
 		</header>
 		<main>
-			<form method="post">
-				<p>{{ question.question }}</p>
-				<select name="answer">
-					<option value="" selected disabled>Select Answer</option>
-					{% for choice in question.choices %}
-					<option value="{{ choice }}">{{ choice }}</option>
-					{% endfor %}
-				</select>
-				<button type="submit">Submit</button>
-			</form>
-			<a href="/" class="menu-link"
-				><button class="menu-button">Main Menu</button></a
-			>
+			<div class="question-section">
+				<form method="post">
+					<p>{{ question.question }}</p>
+					<select name="answer">
+						<option value="" selected disabled>
+							Select Answer
+						</option>
+						{% for choice in question.choices %}
+						<option value="{{ choice }}">{{ choice }}</option>
+						{% endfor %}
+					</select>
+					<button type="submit">Submit</button>
+				</form>
+			</div>
+			<div class="leaderboard-section">
+				<h2>Leaderboard</h2>
+				<div class="leaderboard">
+					<ol>
+						{% for entry in leaderboard %}
+						<li>{{ entry[0] }}: {{ entry[1] }}</li>
+						{% endfor %}
+					</ol>
+				</div>
+			</div>
 		</main>
+		<a href="/" class="menu-link">
+			<button class="menu-button">Main Menu</button>
+		</a>
 	</body>
 </html>

@@ -508,17 +508,21 @@ def start_game():
     return render_template('start_game.html')
 
 
-# Start endless game route
 @app.route('/start_endless_game', methods=['GET', 'POST'])
 def start_endless_game():
     if request.method == 'POST':
         name = request.form.get('name')
         session['name'] = name
         session['score'] = 0
+        session['current_question_index'] = 0
+        session['wrong_answers'] = 0
 
-        # Redirect to the first question
+        # Shuffle the questions and store them in the session
+        shuffled_questions = list(questions)
+        shuffle(shuffled_questions)
+        session['shuffled_questions'] = shuffled_questions
+
         return redirect(url_for('ask_endless_question'))
-
     return render_template('start_endless_game.html')
 
 

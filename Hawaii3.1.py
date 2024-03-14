@@ -401,9 +401,6 @@ questions = [
 
 ]
 
-# Shuffle the list of questions
-shuffle(questions)
-
 # Leaderboard file
 LEADERBOARD_FILE = "leaderboard2.txt"
 
@@ -419,6 +416,10 @@ def home():
 
 @app.route('/start_game', methods=['GET', 'POST'])
 def start_game():
+
+    # Shuffle the list of questions
+    shuffle(questions)
+
     if request.method == 'POST':
         name = request.form.get('name')
         session['name'] = name
@@ -436,65 +437,53 @@ def start_game():
 
 @app.route('/ask_question', methods=['GET', 'POST'])
 def ask_question():
-    # Retrieve the current question index from the session
     current_question_index = session.get('current_question_index', 0)
-
-    # Check if the user has answered all questions
     if current_question_index >= len(questions) or current_question_index >= 20:
-        # Redirect to the game over screen
         return redirect(url_for('game_over'))
 
-    # Get the current question
     question = questions[current_question_index]
-    # Shuffle the choices
     shuffled_choices = sample(question['choices'], len(question['choices']))
-    # Update the question with shuffled choices
     question['choices'] = shuffled_choices
 
     if request.method == 'POST':
-        # Retrieve the user's answer from the form
         answer = request.form.get('answer')
-        # Get the correct answer for the current question
         correct_answer = question['answer']
 
-        # Check if the answer is correct
         if answer == question['answer']:
-            # Increment the user's score
             session['score'] = session.get('score', 0) + 1
-
-            # Update the leaderboard
             name = session['name']
-            with open("leaderboard2.txt", "r+") as f:
-                lines = f.readlines()
-                found = False
-                for i, line in enumerate(lines):
-                    if name in line:
-                        lines[i] = f"{name},{session['score']}\n"
-                        found = True
-                        break
-                if not found:
-                    lines.append(f"{name},{session['score']}\n")
-
-                # Write updated leaderboard back to the file
-                f.seek(0)
-                f.truncate()  # Clear the file content
-                f.writelines(lines)
-
-            # Increment the question index
+            new_score = session['score']
+            leaderboard = []
+            updated = False
+            with open("leaderboard2.txt", "r") as f:
+                for line in f:
+                    n, s = line.strip().split(",")
+                    if n == name:
+                        leaderboard.append((name, new_score))
+                        updated = True
+                    else:
+                        leaderboard.append((n, int(s)))
+            if not updated:
+                leaderboard.append((name, new_score))
+            with open("leaderboard2.txt", "w") as f:
+                for entry in leaderboard:
+                    f.write(f"{entry[0]},{entry[1]}\n")
             session['current_question_index'] = current_question_index + 1
-
-            # Redirect to the "correct" page
             return redirect(url_for('correct_answer'))
-
         else:
-            # Increment the question index
             session['current_question_index'] = current_question_index + 1
-
-            # Redirect to the "incorrect" page with the correct answer for the current question
             return redirect(url_for('incorrect_answer', correct_answer=correct_answer))
 
-    # Render the template for displaying the question
-    return render_template('ask_question.html', question=question, current_question_index=current_question_index + 1, total_questions=min(len(questions), 20))
+    # Load the leaderboard data
+    leaderboard = []
+    with open("leaderboard2.txt", "r") as f:
+        for line in f:
+            name, score = line.strip().split(",")
+            leaderboard.append((name, int(score)))
+
+    print(leaderboard)  # Debug print to check leaderboard data
+
+    return render_template('ask_question.html', question=question, current_question_index=current_question_index + 1, total_questions=min(len(questions), 20), leaderboard=leaderboard)
 
 
 @app.route('/correct_answer')

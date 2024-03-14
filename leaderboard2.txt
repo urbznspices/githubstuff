@@ -1,4 +1,8 @@
-Arel,20
-Mercy,18
+Emily,13
+Drew Douglas IX,12
 Michael,11
-Bryan,10
+Bryan,11
+Nic,10
+Cheap & Janky,10
+Harri,9
+Noelle,8
